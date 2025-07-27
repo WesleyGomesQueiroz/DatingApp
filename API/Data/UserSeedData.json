@@ -1,0 +1,78 @@
+﻿[
+  {
+    "userName": "Lisa",
+    "gender": "female",
+    "dateOfBirth": "1986-07-22",
+    "knownAs": "Lisa",
+    "created": "2025-07-27T20:56:31.378Z",
+    "lastActive": "2025-07-27T20:56:31.378Z",
+    "introduction": "Teste introduction text",
+    "lookingFor": "Teste lookingFor text",
+    "interests": "Teste interests text",
+    "city": "Greenbush",
+    "country": "Martinique",
+    "photos": [
+      {
+        "url": "https://randomuser.me/api/portraits/women/54.jpg",
+        "isMain": true
+      }
+    ]
+  },
+  {
+    "userName": "Karen",
+    "gender": "female",
+    "dateOfBirth": "1995-10-12",
+    "knownAs": "Karen",
+    "created": "2025-07-27T20:56:31.378Z",
+    "lastActive": "2025-07-27T20:56:31.378Z",
+    "introduction": "Teste introduction text",
+    "lookingFor": "Teste lookingFor text",
+    "interests": "Teste interests text",
+    "city": "Celeryville",
+    "country": "Grenada",
+    "photos": [
+      {
+        "url": "https://randomuser.me/api/portraits/women/50.jpg",
+        "isMain": true
+      }
+    ]
+  },
+  {
+    "userName": "Todd",
+    "gender": "male",
+    "dateOfBirth": "1990-02-07",
+    "knownAs": "Todd",
+    "created": "2025-07-27T20:56:31.378Z",
+    "lastActive": "2025-07-27T20:56:31.378Z",
+    "introduction": "Teste introduction text",
+    "lookingFor": "Teste lookingFor text",
+    "interests": "Teste interests text",
+    "city": "Cliff",
+    "country": "British Indian Ocean Territory",
+    "photos": [
+      {
+        "url": "https://randomuser.me/api/portraits/men/90.jpg",
+        "isMain": true
+      }
+    ]
+  },
+  {
+    "userName": "Porter",
+    "gender": "male",
+    "dateOfBirth": "1977-04-09",
+    "knownAs": "Porter",
+    "created": "2025-07-27T20:56:31.378Z",
+    "lastActive": "2025-07-27T20:56:31.378Z",
+    "introduction": "Teste introduction text",
+    "lookingFor": "Teste lookingFor text",
+    "interests": "Teste interests text",
+    "city": "Welda",
+    "country": "Christmas Island",
+    "photos": [
+      {
+        "url": "https://randomuser.me/api/portraits/men/99.jpg",
+        "isMain": true
+      }
+    ]
+  }
+]
