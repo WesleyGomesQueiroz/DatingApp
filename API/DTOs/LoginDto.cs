@@ -2,7 +2,7 @@
 
 namespace API.DTOs
 {
-    public class LoginDto
+    public class LoginDTO
     {
         [Required]
         public string Username { get; set; } = string.Empty;
