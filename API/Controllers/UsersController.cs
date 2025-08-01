@@ -18,7 +18,7 @@ namespace API.Controllers
         {
             var users = await userRepository.GetMembersAsync();
 
-            return Ok(userRepository);
+            return Ok(users);
         }
 
         [HttpGet("{username}")]
