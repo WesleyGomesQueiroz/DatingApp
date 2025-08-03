@@ -2,11 +2,8 @@
 <div class="row">
     <div class="col-4">
         <div class="card">
-            <img 
-                src="{{member.photoUrl || './assets/user.png'}}" 
-                alt="{{member.photoUrl}}"
-                class="card-img img-thumbnail"
-            >
+            <img src="{{member.photoUrl || './assets/user.png'}}" alt="{{member.photoUrl}}"
+                class="card-img img-thumbnail">
             <div>
                 <strong>Location:</strong>
                 <p>{{member.city}}, {{member.country}}</p>
@@ -31,5 +28,27 @@
             </div>
         </div>
     </div>
+
+    <div class="col-8">
+        <tabset class="member-tabs">
+            <tab heading="About {{member.knownAs}}">
+                <h4>Description</h4>
+                <p>{{member.introduction}}</p>
+                <h4>Looking for</h4>
+                <p>{{member.lookingFor}}</p>
+            </tab>
+            <tab heading="Interests">
+                <h4>Interests</h4>
+                <p>{{member.interests}}</p>
+            </tab>
+            <tab heading="Photos">
+                <p>Photos will go here</p>
+            </tab>
+            <tab heading="Messages">
+                <p>Messages will go here</p>
+            </tab>
+        </tabset>
+    </div>
+
 </div>
 }
