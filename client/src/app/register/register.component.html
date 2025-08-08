@@ -3,32 +3,38 @@
     <hr>
     <div class="mb-3 form-floating">
         <input 
+            [class.is-invalid]="registerForm.get('username')?.errors && registerForm.get('username')?.touched"
             type="text" 
             class="form-control" 
             formControlName="username"
             placeholder="Username"
         >
         <label>Username</label>
+        <div class="invalid-feedback text-start">Plase enter a Username</div>
     </div>
 
     <div class="mb-3 form-floating">
         <input 
+            [class.is-invalid]="registerForm.get('password')?.errors && registerForm.get('password')?.touched"
             type="password" 
             class="form-control" 
             formControlName="password"
             placeholder="Password"
         >
         <label>Password</label>
+        <div class="invalid-feedback text-start">Plase enter a Password</div>
     </div>
 
     <div class="mb-3 form-floating">
         <input 
+            [class.is-invalid]="registerForm.get('confirmPassword')?.errors && registerForm.get('confirmPassword')?.touched"
             type="password" 
             class="form-control" 
             formControlName="confirmPassword"
             placeholder="Confirm Password"
         >
         <label>Confirm Password</label>
+        <div class="invalid-feedback text-start">Plase enter a Confirm Password</div>
     </div>
     
     <div class="form-group text-center">
