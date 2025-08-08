@@ -1,13 +1,14 @@
 import { Component, inject, OnInit, output } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AccountService } from '../_services/account.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgIf } from '@angular/common';
+import { TextInputComponent } from "../_forms/text-input/text-input.component";
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf],
+  imports: [ReactiveFormsModule, TextInputComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -25,17 +26,23 @@ export class RegisterComponent implements OnInit {
   initializaForm() {
     this.registerForm = new FormGroup({
       username: new FormControl('', Validators.required),
-      password: new FormControl('', [Validators.required, Validators.minLength(4)]),
-      confirmPassword: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]),
+      confirmPassword: new FormControl('', [Validators.required, this.matchValues('password')]),
     });
-    this.registerForm.controls['password'].valueChanges.subscribe({
-      next: () => this.registerForm.controls['confirmPassword'].updateValueAndValidity()
+
+    this.registerForm.controls['password'].valueChanges.subscribe(() => {
+      this.registerForm.controls['confirmPassword'].updateValueAndValidity();
     })
+
   }
 
   matchValues(matchTo: string): ValidatorFn {
-    return (control: AbstractControl) => {
-      return control.value === control.parent?.get(matchTo)?.value ? null : { isMatching: true }
+    return (control: AbstractControl): ValidationErrors | null => {
+      const parent = control.parent;
+      if (!parent) return null;
+
+      const matchValue = parent.get(matchTo)?.value;
+      return control.value === matchValue ? null : { passwordMismatch: true }
     }
   }
 
