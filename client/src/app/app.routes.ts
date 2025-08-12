@@ -1,33 +1,48 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { MemberListComponent } from './members/member-list/member-list.component';
-import { MemberDetailComponent } from './members/member-detail/member-detail.component';
-import { ListsComponent } from './lists/lists.component';
-import { MessagesComponent } from './messages/messages.component';
-import { authGuard } from './_guards/auth.guard';
-import { TestErrosComponent } from './errors/test-erros/test-erros.component';
-import { NotFoundComponent } from './errors/not-found/not-found.component';
-import { ServerErrorComponent } from './errors/server-error/server-error.component';
-import { MemberEditComponent } from './members/member-edit/member-edit.component';
-import { preventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
+import { Home } from '../features/home/home';
+import { MemberList } from '../features/members/member-list/member-list';
+import { MemberDetailed } from '../features/members/member-detailed/member-detailed';
+import { Lists } from '../features/lists/lists';
+import { Messages } from '../features/messages/messages';
+import { authGuard } from '../core/guards/auth-guard';
+import { TestErrors } from '../features/test-errors/test-errors';
+import { NotFound } from '../shared/errors/not-found/not-found';
+import { ServerError } from '../shared/errors/server-error/server-error';
+import { MemberProfile } from '../features/members/member-profile/member-profile';
+import { MemberPhotos } from '../features/members/member-photos/member-photos';
+import { MemberMessages } from '../features/members/member-messages/member-messages';
+import { memberResolver } from '../features/members/member-resolver';
+import { preventUnsavedChangesGuard } from '../core/guards/prevent-unsaved-changes-guard';
+import { Admin } from '../features/admin/admin';
+import { adminGuard } from '../core/guards/admin-guard';
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent },
+    { path: '', component: Home },
     {
         path: '',
         runGuardsAndResolvers: 'always',
         canActivate: [authGuard],
         children: [
-            { path: 'members', component: MemberListComponent },
-            { path: 'members/:username', component: MemberDetailComponent },
-            { path: 'member/:edit', component: MemberEditComponent, 
-                canDeactivate:[preventUnsavedChangesGuard] },
-            { path: 'lists', component: ListsComponent },
-            { path: 'messages', component: MessagesComponent },
+            { path: 'members', component: MemberList },
+            { 
+                path: 'members/:id', 
+                resolve: {member: memberResolver},
+                runGuardsAndResolvers: 'always',
+                component: MemberDetailed,
+                children: [
+                    {path: '', redirectTo: 'profile', pathMatch: 'full'},
+                    {path: 'profile', component: MemberProfile, title: 'Profile', 
+                        canDeactivate: [preventUnsavedChangesGuard]},
+                    {path: 'photos', component: MemberPhotos, title: 'Photos'},
+                    {path: 'messages', component: MemberMessages, title: 'Messages'},
+                ]
+            },
+            { path: 'lists', component: Lists },
+            { path: 'messages', component: Messages },
+            { path: 'admin', component: Admin, canActivate: [adminGuard] },
         ]
     },
-    { path: 'errors', component: TestErrosComponent },
-    { path: 'not-found', component: NotFoundComponent },
-    { path: 'server-error', component: ServerErrorComponent },
-    { path: '**', component: HomeComponent, pathMatch: 'full' }
+    { path: 'errors', component: TestErrors },
+    { path: 'server-error', component: ServerError },
+    { path: '**', component: NotFound },
 ];

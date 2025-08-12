@@ -1,43 +1,39 @@
-﻿using API.Data;
-using API.Entities;
+using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers
+namespace API.Controllers;
+
+public class BuggyController : BaseApiController
 {
-    public class BuggyController(DataContext context) : BaseApiController
+    [HttpGet("auth")]
+    public IActionResult GetAuth()
     {
-        [Authorize]
-        [HttpGet("auth")]
-        public ActionResult<string> GetAuth()
-        {
-            return "secret text";
-        }
+        return Unauthorized();
+    }
 
-        [HttpGet("not-found")]
-        public ActionResult<AppUser> GetNotFound()
-        {
-            var thing = context.Users.Find(-1);
+    [HttpGet("not-found")]
+    public IActionResult GetNotFound()
+    {
+        return NotFound();
+    }
 
-            if (thing == null) return NotFound();
+    [HttpGet("server-error")]
+    public IActionResult GetServerError()
+    {
+        throw new Exception("This is a server error");
+    }
 
-            return thing;
-        }
+    [HttpGet("bad-request")]
+    public IActionResult GetBadRequest()
+    {
+        return BadRequest("This was not a good request");
+    }
 
-        [HttpGet("server-error")]
-        public ActionResult<AppUser> GetServerError()
-        {
-            var thing = context.Users.Find(-1) ?? throw new Exception("A bad thing has happened");
-
-            return thing;
-        }
-
-        [HttpGet("bad-request")]
-        public ActionResult<string> GetBadRequest()
-        {
-            return BadRequest("This was not a god request");
-        }
-
-
+    [Authorize(Roles = "Admin")]
+    [HttpGet("admin-secret")]
+    public ActionResult<string> GetSecretAdmin()
+    {
+        return Ok("Only admins should see this");
     }
 }

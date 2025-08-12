@@ -1,39 +1,53 @@
-﻿using API.Entities;
-using API.Interfaces;
-using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
+using API.Entities;
+using API.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 
-namespace API.Services
+namespace API.Services;
+
+public class TokenService(IConfiguration config, UserManager<AppUser> userManager) : ITokenService
 {
-    public class TokenService(IConfiguration config) : ITokenService
+    public async Task<string> CreateToken(AppUser user)
     {
-        public string CreateToken(AppUser user)
+        var tokenKey = config["TokenKey"] ?? throw new Exception("Cannot get token key");
+        if (tokenKey.Length < 64)
+            throw new Exception("Your token key needs to be >= 64 characters");
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
+
+        var claims = new List<Claim>
         {
-            var tokenKay = config["TokenKey"] ?? throw new Exception("Cannot access tokenKey from appsettings");
-            if(tokenKay.Length < 64) throw new Exception("Your tokenKey needs to be longer");
+            new(ClaimTypes.Email, user.Email!),
+            new(ClaimTypes.NameIdentifier, user.Id)
+        };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKay));
+        var roles = await userManager.GetRolesAsync(user);
 
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.UserName)
-            };
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(7),
-                SigningCredentials = creds
-            };
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.UtcNow.AddDays(15),
+            SigningCredentials = creds
+        };
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return tokenHandler.WriteToken(token);
-        }
+        return tokenHandler.WriteToken(token);
+    }
+
+    public string GenerateRefreshToken()
+    {
+        var randomBytes = RandomNumberGenerator.GetBytes(64);
+        return Convert.ToBase64String(randomBytes);
     }
 }
